@@ -1,0 +1,15 @@
+.DS_Store
+
+**/.idea
+*.iml
+*.ipr
+*.iws
+
+*.exe
+*.zip
+*.tar.gz
+*.rar
+*.launch
+*.log
+**/run
+*.class

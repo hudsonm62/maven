@@ -1,0 +1,14 @@
+{
+    "trailingComma": "none",
+    "endOfLine": "lf",
+    "useTabs": false,
+    "tabWidth": 2,
+    "overrides": [
+        {
+            "files": ["*.html", "*.json", ".prettierrc"],
+            "options": {
+                "tabWidth": 4
+            }
+        }
+    ]
+}

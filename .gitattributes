@@ -1,0 +1,54 @@
+# Default git behavior
+* text=auto
+
+### OVERRIDES ###
+
+# CRLF => LF
+.prettierrc      text  eol=lf
+.prettierignore  text  eol=lf
+*.txt            text  eol=lf
+*.md             text  eol=lf
+*.gitattributes  text  eol=lf
+*.gitmodules     text  eol=lf
+*.gitignore      text  eol=lf
+*.yml            text  eol=lf
+*.toml           text  eol=lf
+*.json           text  eol=lf
+*.json5          text  eol=lf
+*.jsonc          text  eol=lf
+*.rpo            text  eol=lf
+*.conf           text  eol=lf
+*.cfg            text  eol=lf
+*.cfg.txt        text  eol=lf
+*.properties     text  eol=lf
+*.local          text  eol=lf
+*.mcmeta         text  eol=lf
+*.ps1            text  eol=lf
+*.sh             text  eol=lf
+**/LICENSE       text  eol=lf
+**/CODEOWNERS    text  eol=lf
+*.html           text  eol=lf
+*.pom            text  eol=lf
+*.xml            text  eol=lf
+
+# LF/CRLF => BINARY
+*.db             binary
+*.dat            binary
+*.jar            binary
+*.schematic      binary
+*.schem          binary
+*.icns           binary
+*.jar            binary
+*.aar            binary
+
+# LF => CRLF
+*.url            text  eol=crlf
+
+### Gradle
+**/*.gradle      text eol=lf
+**/gradlew       text eol=lf
+*.bat            text eol=crlf
+
+### Java / Kotlin
+**/*.java        text eol=lf
+**/*.kt          text eol=lf

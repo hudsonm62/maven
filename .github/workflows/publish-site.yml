@@ -1,0 +1,39 @@
+name: Publish Maven site
+
+on:
+  push:
+    branches: master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚙️ Checkout Repo
+        uses: actions/checkout@v7
+
+      # unfinished
+      #- name: ⚙️ Validate Maven Meta & Checksums
+      #  shell: pwsh
+      #  run: ./scripts/Verify-Repo.ps1
+      #  continue-on-error: false
+
+      - name: ⏫ Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        id: upload
+        with:
+          path: ./src
+
+      - name: ⏺ Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v5

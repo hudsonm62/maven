@@ -1,0 +1,32 @@
+{
+    "files.exclude": {
+        "node_modules": true,
+        "package.json": true,
+        "package-lock.json": true,
+        "**/.gradle": true,
+        "**/.idea": true,
+        "**/.kotlin": true
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.associations": {
+        "LICENSE": "txt",
+        "*.txt": "markdown",
+        "**/CODEOWNERS": "ignore"
+    },
+
+    "yaml.schemas": {
+        //"https://json.schemastore.org/github-issue-config.json": ".github/ISSUE_TEMPLATE/config.yml"
+        "https://json.schemastore.org/github-issue-forms.json": ".github/ISSUE_TEMPLATE/**"
+    },
+
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+
+    "search.followSymlinks": false,
+    "search.smartCase": true,
+
+    "git.enableCommitSigning": true,
+    "git.ignoreLimitWarning": true,
+    "cSpell.language": "en,en-AU,en-GB"
+}

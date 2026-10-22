@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ziro's maven</title>
+        <style>
+            :root {
+                color-scheme: dark;
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
+            }
+            body {
+                max-width: 700px;
+                margin: 12vh auto 2rem;
+                padding: 0 24px;
+                background: #101622;
+                color: #e7eef8;
+                line-height: 1.6;
+            }
+            h1 {
+                font-size: 2rem;
+                letter-spacing: -0.025em;
+                text-align: center;
+            }
+            p {
+                color: #b9c4d3;
+            }
+            pre {
+                white-space: pre-wrap;
+                overflow-wrap: anywhere;
+                background: #202b3c;
+                border: 1px solid #34435b;
+                padding: 18px;
+                border-radius: 12px;
+            }
+            code {
+                font-family: ui-monospace, Menlo, Consolas, monospace;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ziro's maven</h1>
+        <p>
+            Maven repository hosted on GitHub Pages, primarily for my personal
+            projects like Minecraft mods.
+        </p>
+        <pre><code>repositories {
+    maven("https://maven.ziroau.com")
+}
+dependencies {
+    modImplementation "com.ziroau:mycoolmod:${project.mycoolmod_version}"
+}</code></pre>
+    </body>
+</html>
