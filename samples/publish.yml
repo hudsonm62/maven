@@ -1,0 +1,73 @@
+name: Publish to Maven
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚙️ Checkout code
+        uses: actions/checkout@v7
+
+      - name: ⚙️ Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: 25 # change for toolchain
+          distribution: temurin
+
+      - name: ⚙️ Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: false
+          gradle-version: wrapper
+          add-job-summary: "on-failure"
+
+      - name: ⚙️ Make Gradle Executable
+        shell: bash
+        run: chmod +x ./gradlew
+
+      - name: 🧪 Run Build
+        shell: bash
+        run: ./gradlew build
+
+      - name: ⚙️ Validate Output
+        shell: pwsh
+        run: |
+          Get-ChildItem -Filter 'fabric/build/libs/*.jar' -Recurse
+          Get-ChildItem -Filter 'neoforge/build/libs/*.jar' -Recurse
+
+      - name: Parse version from release tag
+        id: version
+        shell: bash
+        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: 🚀 Publish JARs (Fabric)
+        uses: hudsonm62/maven/.github/actions/publish-maven@master
+        with:
+          repository: hudsonm62/maven
+          token: ${{ secrets.MAVEN_REPO_TOKEN }}
+          group-id: com.ziroau
+          artifact-id: packagename
+          version: ${{ steps.version.outputs.value }}+fabric
+          file: build/libs/packagename-${{ steps.version.outputs.value }}+fabric.jar
+          sources: build/libs/packagename-${{ steps.version.outputs.value }}+fabric-sources.jar
+          # javadoc: build/libs/packagename-${{ steps.version.outputs.value }}+fabric-javadoc.jar
+          # pom-file: publication.pom  # Optional, for transitive dependencies
+
+      - name: 🚀 Publish JARs (NeoForge)
+        uses: hudsonm62/maven/.github/actions/publish-maven@master
+        with:
+          repository: hudsonm62/maven
+          token: ${{ secrets.MAVEN_REPO_TOKEN }}
+          group-id: com.ziroau
+          artifact-id: packagename
+          version: ${{ steps.version.outputs.value }}+neoforge
+          file: build/libs/packagename-${{ steps.version.outputs.value }}+neoforge.jar
+          sources: build/libs/packagename-${{ steps.version.outputs.value }}+neoforge-sources.jar
+          # javadoc: build/libs/packagename-${{ steps.version.outputs.value }}+neoforge-javadoc.jar
+          # pom-file: publication.pom  # Optional, for transitive dependencies

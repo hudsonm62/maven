@@ -1,0 +1,21 @@
+name: Verify Maven Site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚙️ Checkout Repo
+        uses: actions/checkout@v7
+
+      - name: ⚙️ Validate Maven Meta & Checksums
+        shell: pwsh
+        run: ./scripts/validate.ps1
+        continue-on-error: false

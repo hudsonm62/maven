@@ -22,11 +22,10 @@ jobs:
       - name: ⚙️ Checkout Repo
         uses: actions/checkout@v7
 
-      # unfinished
-      #- name: ⚙️ Validate Maven Meta & Checksums
-      #  shell: pwsh
-      #  run: ./scripts/Verify-Repo.ps1
-      #  continue-on-error: false
+      - name: ⚙️ Validate Maven Meta & Checksums
+        shell: pwsh
+        run: ./scripts/validate.ps1
+        continue-on-error: false
 
       - name: ⏫ Upload artifact
         uses: actions/upload-pages-artifact@v5

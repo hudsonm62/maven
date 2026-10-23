@@ -1,0 +1,137 @@
+name: Publish mod to Maven
+
+description: Add built mod JARs, metadata, and checksums to the central GitHub Pages Maven repository.
+
+inputs:
+  repository:
+    description: Target repository owner/name
+    required: true
+  token:
+    description: Fine-grained PAT or GitHub App token with Contents write permission in the target repository
+    required: true
+  branch:
+    description: Branch where the repository stores src/
+    required: false
+    default: master
+  group-id:
+    description: Maven group ID
+    required: true
+  artifact-id:
+    description: Maven artifact ID
+    required: true
+  version:
+    description: Release version, without the leading v
+    required: true
+  file:
+    description: Built runtime/remapped JAR to publish
+    required: true
+  sources:
+    description: Optional sources JAR
+    required: false
+    default: ""
+  javadoc:
+    description: Optional Javadoc JAR
+    required: false
+    default: ""
+  pom-file:
+    description: Optional POM file (use if there are required transitive dependencies)
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout Maven Repo
+      uses: actions/checkout@v7
+      with:
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.branch }}
+        token: ${{ inputs.token }}
+        persist-credentials: true
+        path: .maven-publisher-checkout
+
+    - name: Publish via MVN
+      shell: pwsh
+      env:
+        GROUP: ${{ inputs.group-id }}
+        ARTIFACT: ${{ inputs.artifact-id }}
+        VERSION: ${{ inputs.version }}
+        FILE: ${{ inputs.file }}
+        SOURCES: ${{ inputs.sources }}
+        JAVADOC: ${{ inputs.javadoc }}
+        POM: ${{ inputs.pom-file }}
+        TARGET_BRANCH: ${{ inputs.branch }}
+      run: |
+        $ErrorActionPreference = 'Stop'
+
+        $repo = Join-Path $env:GITHUB_WORKSPACE '.maven-publisher-checkout'
+        $mavenRepo = Join-Path $repo 'src'
+
+        $groupPath = $env:GROUP.Replace('.', '/')
+        $artifactDir = "$groupPath/$env:ARTIFACT"
+        $artifactPath = "$artifactDir/$env:VERSION/$env:ARTIFACT-$env:VERSION.jar"
+        $jar = Join-Path $mavenRepo $artifactPath
+
+        if (Test-Path -LiteralPath $jar) {
+          throw "Already published: $env:GROUP`:$env:ARTIFACT`:$env:VERSION"
+        }
+
+        if (-not (Test-Path -LiteralPath $env:FILE -PathType Leaf)) {
+          throw "JAR not found: $env:FILE"
+        }
+
+        New-Item -ItemType Directory -Force -Path $mavenRepo | Out-Null
+
+        $repoUri = [System.Uri]::new(
+          [System.IO.Path]::GetFullPath($mavenRepo)
+        ).AbsoluteUri
+
+        $mvnArgs = @(
+          '-B'
+          'org.apache.maven.plugins:maven-deploy-plugin:3.2.0:deploy-file'
+          "-Dfile=$env:FILE"
+          "-DgroupId=$env:GROUP"
+          "-DartifactId=$env:ARTIFACT"
+          "-Dversion=$env:VERSION"
+          '-Dpackaging=jar'
+          '-DrepositoryId=local'
+          "-Durl=$repoUri"
+        )
+
+        if ($env:SOURCES) {
+          $mvnArgs += "-Dsources=$env:SOURCES"
+        }
+
+        if ($env:JAVADOC) {
+          $mvnArgs += "-Djavadoc=$env:JAVADOC"
+        }
+
+        if ($env:POM) {
+          $mvnArgs += "-DpomFile=$env:POM"
+        }
+
+        & mvn @mvnArgs
+        if ($LASTEXITCODE -ne 0) {
+          throw "Maven deploy failed with exit code $LASTEXITCODE"
+        }
+
+        # Stage only the published artifact directory.
+        # -f allows publishing JARs even if ignored by .gitignore.
+        git -C $repo add -f -A -- "src/$artifactDir"
+        if ($LASTEXITCODE -ne 0) {
+          throw "Git add failed with exit code $LASTEXITCODE"
+        }
+
+        git -C $repo `
+          -c 'user.name=github-actions[bot]' `
+          -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' `
+          commit -m "Publish $env:GROUP`:$env:ARTIFACT`:$env:VERSION"
+
+        if ($LASTEXITCODE -ne 0) {
+          throw "Git commit failed with exit code $LASTEXITCODE"
+        }
+
+        git -C $repo push origin "HEAD:$env:TARGET_BRANCH"
+        if ($LASTEXITCODE -ne 0) {
+          throw "Git push failed with exit code $LASTEXITCODE"
+        }
