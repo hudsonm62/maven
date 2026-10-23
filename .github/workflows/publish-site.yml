@@ -3,6 +3,9 @@ name: Publish Maven site
 on:
   push:
     branches: master
+    paths:
+      - 'src/**'
+      - 'scripts/**'
   workflow_dispatch:
 
 permissions:
