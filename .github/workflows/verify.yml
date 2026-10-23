@@ -2,7 +2,7 @@ name: Verify Maven Site
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 permissions:
