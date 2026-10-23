@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.ziroau</groupId>
+  <artifactId>cobblemonquestbridge</artifactId>
+  <versioning>
+    <release>0.0.2+fabric</release>
+    <versions>
+      <version>0.0.2+neoforge</version>
+      <version>0.0.2+fabric</version>
+    </versions>
+    <lastUpdated>20261023044453</lastUpdated>
+  </versioning>
+</metadata>
