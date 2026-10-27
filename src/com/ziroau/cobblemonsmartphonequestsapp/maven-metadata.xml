@@ -3,10 +3,11 @@
   <groupId>com.ziroau</groupId>
   <artifactId>cobblemonsmartphonequestsapp</artifactId>
   <versioning>
-    <release>1.0.0+neoforge</release>
+    <release>1.0.0+fabric</release>
     <versions>
       <version>1.0.0+neoforge</version>
+      <version>1.0.0+fabric</version>
     </versions>
-    <lastUpdated>20261027092029</lastUpdated>
+    <lastUpdated>20261027092034</lastUpdated>
   </versioning>
 </metadata>
