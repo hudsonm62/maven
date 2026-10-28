@@ -3,7 +3,7 @@
   <groupId>com.ziroau</groupId>
   <artifactId>cobblemonquestbridge</artifactId>
   <versioning>
-    <release>0.0.4+fabric</release>
+    <release>0.0.5+neoforge</release>
     <versions>
       <version>0.0.2+neoforge</version>
       <version>0.0.2+fabric</version>
@@ -11,7 +11,8 @@
       <version>0.0.3+neoforge</version>
       <version>0.0.4+neoforge</version>
       <version>0.0.4+fabric</version>
+      <version>0.0.5+neoforge</version>
     </versions>
-    <lastUpdated>20261027095537</lastUpdated>
+    <lastUpdated>20261028065856</lastUpdated>
   </versioning>
 </metadata>
