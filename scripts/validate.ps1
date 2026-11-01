@@ -1,3 +1,4 @@
+
 $repo = Join-Path $PSScriptRoot "../src"
 $errors = 0
 
@@ -34,19 +35,40 @@ foreach ($file in $metadataFiles) {
             continue
         }
 
-        foreach ($ext in @("pom", "jar")) {
-            $path = Join-Path $folder "$artifact-$version.$ext"
+        # Check POM exists
+        $pom = Join-Path $folder "$artifact-$version.pom"
 
-            if (!(Test-Path $path -PathType Leaf)) {
-                Write-Fail "Missing artifact: $path"
-            }
+        if (!(Test-Path $pom -PathType Leaf)) {
+            Write-Fail "Missing POM: $pom"
+        }
+
+        # Check for at least one matching JAR,
+        # classified or unclassified.
+        $baseName = "$artifact-$version"
+
+        $jars = @(Get-ChildItem -LiteralPath $folder -Filter "*.jar" -File |
+            Where-Object {
+                $_.BaseName -eq $baseName -or
+                $_.BaseName.StartsWith(
+                    "$baseName-",
+                    [System.StringComparison]::Ordinal
+                )
+            })
+
+        if ($jars.Count -eq 0) {
+            Write-Fail "No JAR artifacts found for $artifact`:$version in $folder"
         }
     }
 }
 
 # Check existing MD5 / SHA1 checksums
-Get-ChildItem $repo -Recurse -File | Where-Object { $_.Extension -in @(".md5", ".sha1") } | ForEach-Object {
-        $target = $_.FullName.Substring(0, $_.FullName.Length - $_.Extension.Length)
+Get-ChildItem $repo -Recurse -File |
+    Where-Object { $_.Extension -in @(".md5", ".sha1") } |
+    ForEach-Object {
+        $target = $_.FullName.Substring(
+            0,
+            $_.FullName.Length - $_.Extension.Length
+        )
 
         if (!(Test-Path $target -PathType Leaf)) {
             Write-Fail "Missing checksum target: $target"
