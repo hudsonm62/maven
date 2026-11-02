@@ -3,7 +3,7 @@
   <groupId>com.ziroau</groupId>
   <artifactId>iolaus</artifactId>
   <versioning>
-    <release>0.0.3+fabric</release>
+    <release>0.0.4+neoforge</release>
     <versions>
       <version>0.0.1+neoforge</version>
       <version>0.0.1+fabric</version>
@@ -11,7 +11,8 @@
       <version>0.0.2+fabric</version>
       <version>0.0.3+neoforge</version>
       <version>0.0.3+fabric</version>
+      <version>0.0.4+neoforge</version>
     </versions>
-    <lastUpdated>20261030083205</lastUpdated>
+    <lastUpdated>20261102070208</lastUpdated>
   </versioning>
 </metadata>
